@@ -53,19 +53,25 @@ class UserViewSet(ModelViewSet):
 
         if serializer.is_valid(raise_exception=True):
 
-            if self.request.user.check_password(serializer.data.get('current_password')):
-                self.request.user.set_password(serializer.data.get('new_password'))
+            if self.request.user.check_password(
+                    serializer.data.get('current_password')):
+                self.request.user.set_password(
+                    serializer.data.get('new_password'))
                 self.request.user.save()
                 return Response(
                     {'detail': request.data.get('new_password')},
                     status=status.HTTP_205_RESET_CONTENT
                 )
 
-            return Response({'detail': 'Неверный пароль'},
-                status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'detail': 'Неверный пароль'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-        return Response({'detail': 'Учетные данные не были предоставлены.'},
-            status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {'detail': 'Учетные данные не были предоставлены.'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
 
     @action(
         detail=False,
@@ -106,12 +112,14 @@ class UserViewSet(ModelViewSet):
             )
 
         if follower == followed:
-            return Response({'detail': 'Нельзя подписаться на себя!'},
+            return Response(
+                {'detail': 'Нельзя подписаться на себя!'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         if Subscribers.objects.filter(author=followed, user=follower).exists():
-            return Response({'detail': 'Вы уже подписаны!'},
+            return Response(
+                {'detail': 'Вы уже подписаны!'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

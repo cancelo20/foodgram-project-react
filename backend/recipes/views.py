@@ -72,7 +72,8 @@ class RecipeViewset(ModelViewSet):
         user = User.objects.get(username=request.user)
         recipe = get_object_or_404(Recipe, id=id)
 
-        if ShoppingCartRecipe.objects.filter(user=user, recipe=recipe).exists():
+        if ShoppingCartRecipe.objects.filter(
+                user=user, recipe=recipe).exists():
             raise ValidationError('Рецепт уже добавлен!')
 
         favorite = ShoppingCartRecipe.objects.create(user=user, recipe=recipe)
@@ -94,6 +95,7 @@ class RecipeViewset(ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
     @action(
         detail=False,
         methods=['GET'],
@@ -102,25 +104,28 @@ class RecipeViewset(ModelViewSet):
     )
     def download_shopping_cart(self, request):
         try:
-            shopping_cart = ShoppingCartRecipe.objects.filter(user=request.user).all()
+            shopping_cart = ShoppingCartRecipe.objects.filter(
+                user=request.user).all()
             shopping_list = {}
             for item in shopping_cart:
                 for recipe_ingredient in item.recipe.recipe_ingredients.all():
                     name = recipe_ingredient.ingredient.name
-                    measuring_unit = recipe_ingredient.ingredient.measurement_unit
+                    m_unit = recipe_ingredient.ingredient.measurement_unit
                     amount = recipe_ingredient.amount
                     if name not in shopping_list:
                         shopping_list[name] = {
                             'name': name,
-                            'measurement_unit': measuring_unit,
+                            'measurement_unit': m_unit,
                             'amount': amount
                         }
                     else:
                         shopping_list[name]['amount'] += amount
             content = (
-                [f'{item["name"]} ({item["measurement_unit"]}) '
-                f'- {item["amount"]}\n'
-                for item in shopping_list.values()]
+                [
+                    f'{item["name"]} ({item["measurement_unit"]}) '
+                    f'- {item["amount"]}\n'
+                    for item in shopping_list.values()
+                ]
             )
             filename = 'shopping_list.txt'
             response = HttpResponse(content, content_type='text/plain')
@@ -130,6 +135,7 @@ class RecipeViewset(ModelViewSet):
             return response
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()

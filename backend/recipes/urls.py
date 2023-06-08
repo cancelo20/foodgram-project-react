@@ -20,7 +20,7 @@ favorite = RecipeViewset.as_view(
 shopping_cart = RecipeViewset.as_view(
     {
         'post': 'add_to_shopping_cart',
-        'delete':'del_shopping_cart'
+        'delete': 'del_shopping_cart'
     }
 )
 

@@ -98,36 +98,36 @@ class RecipeSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-            context = self.context.get('request')
-            validated_data.pop('recipe_ingredient')
+        context = self.context.get('request')
+        validated_data.pop('recipe_ingredient')
 
-            try:
-                recipe = Recipe.objects.create(
-                    **validated_data,
-                    author=self.context.get('request').user
-                )
-            except IntegrityError:
-                pass
+        try:
+            recipe = Recipe.objects.create(
+                **validated_data,
+                author=self.context.get('request').user
+            )
+        except IntegrityError:
+            pass
 
-            tags_set = context.data.get('tags')
+        tags_set = context.data.get('tags')
 
-            for tag in tags_set:
-                RecipesTags.objects.create(
-                    recipe=recipe,
-                    tag=Tag.objects.get(id=tag)
-                )
+        for tag in tags_set:
+            RecipesTags.objects.create(
+                recipe=recipe,
+                tag=Tag.objects.get(id=tag)
+            )
 
-            ingredients_set = context.data.get('ingredients')
+        ingredients_set = context.data.get('ingredients')
 
-            for ingredient in ingredients_set:
-                ingredient_model = Ingredient.objects.get(id=ingredient['id'])
-                RecipesIngredients.objects.create(
-                    recipe=recipe,
-                    ingredient=ingredient_model,
-                    amount=ingredient['amount'],
-                )
+        for ingredient in ingredients_set:
+            ingredient_model = Ingredient.objects.get(id=ingredient['id'])
+            RecipesIngredients.objects.create(
+                recipe=recipe,
+                ingredient=ingredient_model,
+                amount=ingredient['amount'],
+            )
 
-            return recipe
+        return recipe
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
@@ -193,19 +193,19 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField(
         read_only=True,
-        source = 'recipe.id'
+        source='recipe.id'
     )
     name = serializers.CharField(
         read_only=True,
-        source = 'recipe.name'
+        source='recipe.name'
         )
     image = serializers.CharField(
         read_only=True,
-        source = 'recipe.image'
+        source='recipe.image'
     )
     cooking_time = serializers.CharField(
         read_only=True,
-        source = 'recipe.cooking_time'
+        source='recipe.cooking_time'
     )
 
     class Meta:
@@ -223,19 +223,19 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField(
         read_only=True,
-        source = 'recipe.id'
+        source='recipe.id'
     )
     name = serializers.CharField(
         read_only=True,
-        source = 'recipe.name'
+        source='recipe.name'
         )
     image = serializers.CharField(
         read_only=True,
-        source = 'recipe.image'
+        source='recipe.image'
     )
     cooking_time = serializers.CharField(
         read_only=True,
-        source = 'recipe.cooking_time'
+        source='recipe.cooking_time'
     )
 
     class Meta:

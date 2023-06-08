@@ -11,7 +11,6 @@ from recipes.serializers import RecipeSerializer
 from .models import Subscribers, CustomUser as User
 
 
-
 class UserSerializer(serializers.ModelSerializer):
     """Сериализатор модели пользователейю"""
 
@@ -111,18 +110,18 @@ class UserSubscribeSerializer(UserSerializer):
     id = serializers.CharField(
         read_only=True,
     )
-    username=serializers.CharField(
+    username = serializers.CharField(
         read_only=True,
     )
-    first_name=serializers.CharField(
+    first_name = serializers.CharField(
         read_only=True,
     )
-    last_name=serializers.CharField(
+    last_name = serializers.CharField(
         read_only=True,
     )
     is_subscribed = serializers.SerializerMethodField()
-    recipes_count=serializers.SerializerMethodField()
-    recipes=serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField()
 
     class Meta:
         model = User
