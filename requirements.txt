@@ -1,0 +1,9 @@
+requests==2.26.0
+Django==3.2
+djangorestframework==3.12.4
+django-extra-fields
+django-filter==22.1
+djoser
+Pillow
+psycopg2
+python-dotenv==0.19.0
