@@ -42,7 +42,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='recipes',
+        related_name='author',
         help_text='Автор рецепта',
     )
     ingredients = models.ManyToManyField(

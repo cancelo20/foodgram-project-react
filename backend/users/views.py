@@ -1,4 +1,4 @@
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.serializers import ListSerializer
 from rest_framework.viewsets import ModelViewSet
@@ -8,13 +8,15 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 
-from recipes.permissions import IsAdminOrUser
+from .permissions import IsAdminOrUser, UserPermissions
 
 from .models import Subscribers, CustomUser as User
 from .serializers import (
+    GetSubscritionsSerializer,
     UserSetPasswordSerializer,
     UserSubscribeSerializer,
-    UserSerializer,)
+    UserSerializer,
+)
 
 
 class UserViewSet(ModelViewSet):
@@ -22,14 +24,22 @@ class UserViewSet(ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AllowAny,)
     http_method_names = ('post', 'get', 'delete')
+
+    def get_permissions(self):
+        if self.action in ['subscribe', 'unsubscribe', 'get_subscriptions']:
+            permission_classes = (IsAuthenticated,)
+        elif self.action in ['get_self_user_info', 'set_password']:
+            permission_classes = (IsAdminOrUser,)
+        else:
+            permission_classes = (UserPermissions,)
+
+        return [permission() for permission in permission_classes]
 
     @action(
         detail=False,
         methods=['get'],
         url_path='me',
-        permission_classes=(IsAdminOrUser, IsAuthenticated)
     )
     def get_self_user_info(self, request):
         """Информация пользователя о самом себе."""
@@ -43,40 +53,29 @@ class UserViewSet(ModelViewSet):
         detail=False,
         methods=['post'],
         url_path='set_password',
-        permission_classes=(IsAdminOrUser),
         serializer_class=UserSetPasswordSerializer
     )
     def set_password(self, request):
         """Функция смены пароля."""
 
-        serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid(raise_exception=True):
-
-            if self.request.user.check_password(
-                    serializer.data.get('current_password')):
-                self.request.user.set_password(
-                    serializer.data.get('new_password'))
-                self.request.user.save()
-                return Response(
-                    {'detail': request.data.get('new_password')},
-                    status=status.HTTP_205_RESET_CONTENT
-                )
-
-            return Response(
-                {'detail': 'Неверный пароль'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        serializer = UserSetPasswordSerializer(
+            data=request.data,
+            context={
+                'request': request,
+                'request_data': request.data
+            }
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         return Response(
-            {'detail': 'Учетные данные не были предоставлены.'},
-            status=status.HTTP_401_UNAUTHORIZED
+            {'detail': request.data.get('new_password')},
+            status=status.HTTP_205_RESET_CONTENT
         )
 
     @action(
         detail=False,
         methods=['get'],
-        permission_classes=(IsAuthenticated,),
         url_path='subscriptions'
     )
     def get_subscriptions(self, request):
@@ -101,37 +100,25 @@ class UserViewSet(ModelViewSet):
     @action(
         detail=False,
         methods=['post'],
-        permission_classes=[IsAuthenticated],
+        serializer_class=UserSubscribeSerializer,
     )
     def subscribe(self, request, id):
         """Подписаться на пользователя по id."""
+
         followed = get_object_or_404(User, id=id)
-        follower = request.user
+        context = {'request': request}
         serializer = UserSubscribeSerializer(
-                context=self.get_serializer_context()
+                context=context,
+                data={'id': id}
             )
 
-        if follower == followed:
-            return Response(
-                {'detail': 'Нельзя подписаться на себя!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if Subscribers.objects.filter(author=followed, user=follower).exists():
-            return Response(
-                {'detail': 'Вы уже подписаны!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        Subscribers.objects.create(
-            user=follower,
-            author=followed
-        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         return Response(
-            serializer.to_representation(
-                instance=followed
-            ),
+            GetSubscritionsSerializer(
+                context=context
+            ).to_representation(instance=followed),
             status=status.HTTP_201_CREATED
         )
 
@@ -145,7 +132,11 @@ class UserViewSet(ModelViewSet):
         try:
             Subscribers.objects.filter(
                 user=follower, author=followed).delete()
-
-            return Response(status=status.HTTP_204_NO_CONTENT)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                GetSubscritionsSerializer(
+                    ).to_representation(instance=followed),
+                status=status.HTTP_204_NO_CONTENT
+            )

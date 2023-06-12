@@ -1,5 +1,6 @@
 from drf_extra_fields.fields import Base64ImageField
 
+from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 
 from django.db import IntegrityError
@@ -37,7 +38,11 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = [
+            'id',
+            'name',
+            'measurement_unit',
+        ]
         extra_kwargs = {
             'id': {'read_only': True}
         }
@@ -56,6 +61,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         read_only=True,
         source='ingredient.measurement_unit'
     )
+    amount = serializers.IntegerField(required=True)
 
     class Meta:
         model = RecipesIngredients
@@ -188,61 +194,76 @@ class RecipeSerializer(serializers.ModelSerializer):
         return False
 
 
-class FavoriteSerializer(serializers.ModelSerializer):
-    """Сериализация избранных рецептов."""
-
-    id = serializers.CharField(
-        read_only=True,
-        source='recipe.id'
-    )
-    name = serializers.CharField(
-        read_only=True,
-        source='recipe.name'
-        )
-    image = serializers.CharField(
-        read_only=True,
-        source='recipe.image'
-    )
-    cooking_time = serializers.CharField(
-        read_only=True,
-        source='recipe.cooking_time'
-    )
-
+class GetShortRecipeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FavoriteRecipe
+        model = Recipe
         fields = (
             'id',
             'name',
             'image',
             'cooking_time'
         )
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    """Сериализация избранных рецептов."""
+
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = FavoriteRecipe
+        fields = ('id',)
+
+    def validate(self, data):
+        username = self.context.get('request').user
+        recipe = Recipe.objects.get(id=data.get('id'))
+
+        if username == recipe.author:
+            raise ValidationError('Вы автор рецепта!')
+
+        if FavoriteRecipe.objects.filter(
+                user=username, recipe=recipe).exists():
+            raise ValidationError('Рецепт уже добавлен!')
+
+        return data
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        recipe = Recipe.objects.get(id=validated_data.get('id'))
+
+        favorite = FavoriteRecipe.objects.create(user=user, recipe=recipe)
+        favorite.save()
+
+        return favorite
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
     """Сериализация списка покупок."""
 
-    id = serializers.CharField(
-        read_only=True,
-        source='recipe.id'
-    )
-    name = serializers.CharField(
-        read_only=True,
-        source='recipe.name'
-        )
-    image = serializers.CharField(
-        read_only=True,
-        source='recipe.image'
-    )
-    cooking_time = serializers.CharField(
-        read_only=True,
-        source='recipe.cooking_time'
-    )
+    id = serializers.IntegerField()
 
     class Meta:
         model = ShoppingCartRecipe
-        fields = (
-            'id',
-            'name',
-            'image',
-            'cooking_time'
-        )
+        fields = ('id',)
+
+    def validate(self, data):
+        username = self.context.get('request').user
+        recipe = Recipe.objects.get(id=data.get('id'))
+
+        if username == recipe.author:
+            raise ValidationError('Вы автор рецепта!')
+
+        if ShoppingCartRecipe.objects.filter(
+                user=username, recipe=recipe).exists():
+            raise ValidationError('Рецепт уже добавлен!')
+
+        return data
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        recipe = Recipe.objects.get(id=validated_data.get('id'))
+
+        favorite = ShoppingCartRecipe.objects.create(user=user, recipe=recipe)
+        favorite.save()
+
+        return favorite

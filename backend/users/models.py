@@ -62,3 +62,6 @@ class Subscribers(models.Model):
             fields=['author', 'user'],
             name='unique_object'
         )]
+
+    def __str__(self):
+        return f'{self.user} --> {self.author}'
