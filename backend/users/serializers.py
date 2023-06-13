@@ -21,17 +21,19 @@ class UserSerializer(
 
     username = serializers.CharField(
         max_length=150,
-        validators=[UniqueValidator(
-            queryset=User.objects.all(),
-            message='Такой пользователь уже существует',
+        validators=[
+            UniqueValidator(
+                queryset=User.objects.all(),
+                message='Такой пользователь уже существует',
             )
         ],
     )
     email = serializers.EmailField(
         max_length=254,
-        validators=[UniqueValidator(
-            queryset=User.objects.all(),
-            message='Такая почта уже существует',
+        validators=[
+            UniqueValidator(
+                queryset=User.objects.all(),
+                message='Такая почта уже существует',
             )
         ],
     )

@@ -49,9 +49,9 @@ class RecipeViewset(ModelViewSet):
 
         recipe = get_object_or_404(Recipe, id=id)
         serializer = FavoriteSerializer(
-                context={'request': request},
-                data={'id': id}
-            )
+            context={'request': request},
+            data={'id': id}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -85,9 +85,9 @@ class RecipeViewset(ModelViewSet):
 
         recipe = get_object_or_404(Recipe, id=id)
         serializer = ShoppingCartSerializer(
-                context={'request': request},
-                data={'id': id}
-            )
+            context={'request': request},
+            data={'id': id}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -109,7 +109,7 @@ class RecipeViewset(ModelViewSet):
         else:
             return Response(
                 GetShortRecipeSerializer(
-                    ).to_representation(instance=recipe),
+                ).to_representation(instance=recipe),
                 status=status.HTTP_204_NO_CONTENT)
 
     @action(

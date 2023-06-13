@@ -108,9 +108,9 @@ class UserViewSet(ModelViewSet):
         followed = get_object_or_404(User, id=id)
         context = {'request': request}
         serializer = UserSubscribeSerializer(
-                context=context,
-                data={'id': id}
-            )
+            context=context,
+            data={'id': id}
+        )
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -137,6 +137,6 @@ class UserViewSet(ModelViewSet):
         else:
             return Response(
                 GetSubscritionsSerializer(
-                    ).to_representation(instance=followed),
+                ).to_representation(instance=followed),
                 status=status.HTTP_204_NO_CONTENT
             )

@@ -54,8 +54,9 @@ class Recipe(models.Model):
     image = models.ImageField('Изображение', upload_to='recipes/')
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления в минутах',
-        validators=[MinValueValidator(
-            1, 'Минимальное время - 1 минута'
+        validators=[
+            MinValueValidator(
+                1, 'Минимальное время - 1 минута'
             )
         ],
     )
