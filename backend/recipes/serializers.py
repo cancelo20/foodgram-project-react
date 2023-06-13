@@ -22,7 +22,6 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(required=True,)
     slug = serializers.SlugField()
 
     class Meta:

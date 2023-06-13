@@ -138,7 +138,9 @@ class GetSubscritionsSerializer(
         )
         extra_kwargs = {
             'id': {'read_only': True},
-            'is_subscribed': {'read_only': True}
+            'is_subscribed': {'read_only': True},
+            'recipes_count': {'read_only': True},
+            'recipes': {'read_only': True},
         }
 
     def get_recipes_count(self, data):
@@ -150,10 +152,7 @@ class GetSubscritionsSerializer(
         return serializer.data
 
 
-class UserSubscribeSerializer(
-        serializers.ModelSerializer,
-        IsSubscribedMixin
-):
+class UserSubscribeSerializer(serializers.ModelSerializer):
     """Сериализация подписок."""
 
     id = serializers.IntegerField()
@@ -164,7 +163,7 @@ class UserSubscribeSerializer(
 
     def validate(self, data):
         id = data.get('id')
-        followed = followed = get_object_or_404(User, id=id)
+        followed = get_object_or_404(User, id=id)
         follower = self.context.get('request').user
 
         if follower == followed:

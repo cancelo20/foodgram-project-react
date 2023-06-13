@@ -42,8 +42,7 @@ class RecipeViewset(ModelViewSet):
     @action(
         detail=False,
         methods=['post'],
-        url_path='favorite',
-        permission_classes=(IsAuthenticated,)
+        url_path='favorite'
     )
     def add_to_favorite(self, request, id):
         """Добавление рецепта в избранное."""
@@ -79,8 +78,7 @@ class RecipeViewset(ModelViewSet):
 
     @action(
         detail=False,
-        methods=['post'],
-        permission_classes=(IsAuthenticated,)
+        methods=['post']
     )
     def add_to_shopping_cart(self, request, id):
         """Добавление рецепта в список покупок."""
@@ -118,7 +116,6 @@ class RecipeViewset(ModelViewSet):
         detail=False,
         methods=['GET'],
         url_path='download_shopping_cart',
-        permission_classes=(IsAuthenticated,)
     )
     def download_shopping_cart(self, request):
         try:
