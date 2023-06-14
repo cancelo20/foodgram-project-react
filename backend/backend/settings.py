@@ -14,7 +14,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '158.160.20.62', '127.0.0.1', 'localhost', 'myfoodgramproject.ddns.net'
+    os.environ.get('ALLOWED_HOST_1'),
+    os.environ.get('ALLOWED_HOST_2'),
+    os.environ.get('ALLOWED_HOST_3'),
+    os.environ.get('ALLOWED_HOST_4')
 ]
 
 
