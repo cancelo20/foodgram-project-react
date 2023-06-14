@@ -2,12 +2,6 @@ name: Django-app foodgram-backend-workflow
 
 on: [push]
 
-env:
-  ALLOWED_HOST_1: ${{ secrets.ALLOWED_HOST_1 }}
-  ALLOWED_HOST_2: ${{ secrets.ALLOWED_HOST_2 }}
-  ALLOWED_HOST_3: ${{ secrets.ALLOWED_HOST_3 }}
-  ALLOWED_HOST_4: ${{ secrets.ALLOWED_HOST_4 }}
-
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -77,6 +71,10 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo ALLOWED_HOST_1=${{ secrets.ALLOWED_HOST_1 }}
+          echo ALLOWED_HOST_2=${{ secrets.ALLOWED_HOST_2 }}
+          echo ALLOWED_HOST_3=${{ secrets.ALLOWED_HOST_3 }}
+          echo ALLOWED_HOST_4=${{ secrets.ALLOWED_HOST_4 }}
           sudo docker-compose up -d --build
           sudo docker-compose exec -T web python manage.py migrate
           sudo docker-compose exec -T web python manage.py collectstatic --no-input
