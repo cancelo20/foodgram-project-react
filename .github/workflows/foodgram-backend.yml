@@ -64,17 +64,6 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:v1
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:v1
           sudo docker-compose down -v
-          touch .env
-          echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-          echo ALLOWED_HOST_1=${{ secrets.ALLOWED_HOST_1 }}
-          echo ALLOWED_HOST_2=${{ secrets.ALLOWED_HOST_2 }}
-          echo ALLOWED_HOST_3=${{ secrets.ALLOWED_HOST_3 }}
-          echo ALLOWED_HOST_4=${{ secrets.ALLOWED_HOST_4 }}
           sudo docker-compose up -d --build
           sudo docker-compose exec -T web python manage.py migrate
           sudo docker-compose exec -T web python manage.py collectstatic --no-input
