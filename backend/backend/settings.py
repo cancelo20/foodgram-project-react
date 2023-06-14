@@ -17,7 +17,7 @@ ALLOWED_HOSTS = [
     os.environ.get('ALLOWED_HOST_1'),
     os.environ.get('ALLOWED_HOST_2'),
     os.environ.get('ALLOWED_HOST_3'),
-    os.environ.get('ALLOWED_HOST_4')
+    os.environ.get('ALLOWED_HOST_4'),
 ]
 
 
