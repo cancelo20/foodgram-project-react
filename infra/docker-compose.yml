@@ -19,19 +19,12 @@ services:
     env_file:
       - ./.env
 
-  #frontend:
-  #  image: cancelo20/foodgram-frontend:v1
-  #  volumes:
-  #    - ../frontend/:/app/result_build/
-  #  depends_on:
-  #    - backend
-
   frontend:
-  build:
-    context: ../frontend
-    dockerfile: Dockerfile
-  volumes:
-    - ../frontend/:/app/result_build/
+    image: cancelo20/foodgram-frontend:v1
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - backend
 
   nginx:
     image: nginx:1.21.3-alpine

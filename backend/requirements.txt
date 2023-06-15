@@ -4,6 +4,7 @@ djangorestframework==3.12.4
 django-extra-fields
 django-filter==22.1
 djoser
+dotenv
 Pillow
 python-dotenv==0.19.0
 gunicorn
