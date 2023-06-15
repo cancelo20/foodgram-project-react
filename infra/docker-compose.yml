@@ -6,7 +6,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env
+      - home/cancelo/.env
 
   backend:
     image: cancelo20/foodgram-backend:v1
@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env
+      - home/cancelo/.env
 
   frontend:
     image: cancelo20/foodgram-frontend:v1
