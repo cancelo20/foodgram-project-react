@@ -14,10 +14,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    os.getenv('ALLOWED_HOST_1'),
-    os.getenv('ALLOWED_HOST_2'),
-    os.getenv('ALLOWED_HOST_3'),
-    os.getenv('ALLOWED_HOST_4'),
+    os.environ.get('ALLOWED_HOST_1'),
+    os.environ.get('ALLOWED_HOST_2'),
+    os.environ.get('ALLOWED_HOST_3'),
+    os.environ.get('ALLOWED_HOST_4'),
 ]
 
 
