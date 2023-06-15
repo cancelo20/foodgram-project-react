@@ -19,7 +19,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient)
 
-from users.permissions import IsAdminOrReadOnly
+# from users.permissions import IsAdminOrReadOnly
 from .permissions import RecipePermissions
 
 
