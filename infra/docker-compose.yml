@@ -5,8 +5,8 @@ services:
     image: postgres:13.0-alpine
     volumes:
       - db_data:/var/lib/postgresql/data/
-    #env_file:
-    #  - ./.env
+    env_file:
+      - ./.env
 
   backend:
     image: cancelo20/foodgram-backend:v1
@@ -16,8 +16,8 @@ services:
       - media_value:/app/media/
     depends_on:
       - db
-    #env_file:
-    #  - ./.env
+    env_file:
+      - ./.env
 
   frontend:
     image: cancelo20/foodgram-frontend:v1
