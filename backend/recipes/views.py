@@ -3,7 +3,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
-from rest_framework.permissions import AllowAny
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
@@ -19,7 +18,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient)
 
-# from users.permissions import IsAdminOrReadOnly
+from users.permissions import IsAdminOrReadOnly
 from .permissions import RecipePermissions
 
 
@@ -73,7 +72,6 @@ class RecipeViewset(ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
-                GetShortRecipeSerializer().to_representation(instance=recipe),
                 status=status.HTTP_204_NO_CONTENT
             )
 
@@ -93,7 +91,6 @@ class RecipeViewset(ModelViewSet):
         serializer.save()
 
         return Response(
-            GetShortRecipeSerializer().to_representation(instance=recipe),
             status=status.HTTP_201_CREATED
         )
 
@@ -109,9 +106,9 @@ class RecipeViewset(ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
-                GetShortRecipeSerializer(
-                ).to_representation(instance=recipe),
-                status=status.HTTP_204_NO_CONTENT)
+                GetShortRecipeSerializer().to_representation(instance=get_object_or_404(ShoppingCartRecipe, user=user)),
+                status=status.HTTP_204_NO_CONTENT
+            )
 
     @action(
         detail=False,
@@ -157,10 +154,10 @@ class RecipeViewset(ModelViewSet):
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminOrReadOnly,)
 
 
 class IngredientsViewSet(ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminOrReadOnly,)
