@@ -91,6 +91,7 @@ class RecipeViewset(ModelViewSet):
         serializer.save()
 
         return Response(
+            GetShortRecipeSerializer().to_representation(instance=recipe),
             status=status.HTTP_201_CREATED
         )
 
@@ -106,7 +107,6 @@ class RecipeViewset(ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
-                GetShortRecipeSerializer().to_representation(instance=get_object_or_404(ShoppingCartRecipe, user=user)),
                 status=status.HTTP_204_NO_CONTENT
             )
 
