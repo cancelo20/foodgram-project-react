@@ -13,12 +13,6 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-(o*$cc$jga5-3q-(66
 
 DEBUG = False
 
-#ALLOWED_HOSTS = [
-#    os.getenv('ALLOWED_HOST_1', default='158.160.20.62'),
-#    os.getenv('ALLOWED_HOST_2', default='127.0.0.1'),
-#    os.getenv('ALLOWED_HOST_3', default='localhost'),
-#    os.getenv('ALLOWED_HOST_4', default='myfoodgramproject.ddns.net'),
-#]
 ALLOWED_HOSTS = ['*']
 
 
