@@ -2,6 +2,18 @@ name: Django-app foodgram-backend-workflow
 
 on: [push]
 
+env:
+  DB_ENGINE: ${{ secrets.DB_ENGINE }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  DB_HOST: ${{ secrets.DB_HOST }}
+  DB_PORT: ${{ secrets.DB_PORT }}
+  ALLOWED_HOST_1: ${{ secrets.ALLOWED_HOST_1 }}
+  ALLOWED_HOST_2: ${{ secrets.ALLOWED_HOST_2 }}
+  ALLOWED_HOST_3: ${{ secrets.ALLOWED_HOST_3 }}
+  ALLOWED_HOST_4: ${{ secrets.ALLOWED_HOST_4 }}
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -64,18 +76,6 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:v1
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:v1
           sudo docker-compose down -v
-          rm -f .env
-          touch .env
-          echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-          echo ALLOWED_HOST_1=${{ secrets.ALLOWED_HOST_1 }} >> .env
-          echo ALLOWED_HOST_2=${{ secrets.ALLOWED_HOST_2 }} >> .env
-          echo ALLOWED_HOST_3=${{ secrets.ALLOWED_HOST_3 }} >> .env
-          echo ALLOWED_HOST_4=${{ secrets.ALLOWED_HOST_4 }} >> .env
           sudo docker-compose up -d --build
           sudo docker-compose exec -T web python manage.py migrate
           sudo docker-compose exec -T web python manage.py collectstatic --no-input
