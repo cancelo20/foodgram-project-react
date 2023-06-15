@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env
+      - ./cancelo/.env
 
   frontend:
     image: cancelo20/foodgram-frontend:v1
