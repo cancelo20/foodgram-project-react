@@ -9,15 +9,15 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-(o*$cc$jga5-3q-(66h4i$1hf!q^dnop!t=bxmnumg1&*@5i83')
 
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    os.getenv('ALLOWED_HOST_1'),
-    os.getenv('ALLOWED_HOST_2'),
-    os.getenv('ALLOWED_HOST_3'),
-    os.getenv('ALLOWED_HOST_4'),
+    os.getenv('ALLOWED_HOST_1', default='158.160.20.62'),
+    os.getenv('ALLOWED_HOST_2', default='127.0.0.1'),
+    os.getenv('ALLOWED_HOST_3', default='localhost'),
+    os.getenv('ALLOWED_HOST_4', default='myfoodgramproject.ddns.net'),
 ]
 
 
@@ -69,12 +69,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default='5432')
     }
 }
 
