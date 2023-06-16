@@ -19,6 +19,8 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient)
 
+from .filters import RecipeFilter
+
 from users.permissions import IsAdminOrReadOnly
 from .permissions import RecipePermissions
 
@@ -26,6 +28,7 @@ from .permissions import RecipePermissions
 class RecipeViewset(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    filterset_class = RecipeFilter
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_permissions(self):
