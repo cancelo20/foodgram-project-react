@@ -162,7 +162,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
 
         if FavoriteRecipe.objects.filter(
-                recipe=data.id, user=request.user).exists():
+                recipe=data, user=request.user).exists():
 
             return True
 
@@ -175,7 +175,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
 
         if ShoppingCartRecipe.objects.filter(
-                recipe=data.id, user=request.user).exists():
+                recipe=data, user=request.user).exists():
 
             return True
 
