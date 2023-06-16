@@ -61,10 +61,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     author = AuthorSerializer(read_only=True)
     tags = TagSerializer(many=True)
-    ingredients = RecipeIngredientSerializer(
-        many=True,
-        source='recipe_ingredient'
-    )
+    ingredients = serializers.SerializerMethodField()
     image = Base64ImageField(
         max_length=None, use_url=True,
     )
@@ -154,6 +151,12 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
 
         return instance
+
+    def get_ingredients(self, obj):
+        ingredients = RecipesIngredients.objects.filter(recipe=obj)
+        serializer = RecipeIngredientSerializer(ingredients, many=True)
+
+        return serializer.data
 
     def get_is_favorited(self, data):
         request = self.context.get('request')
