@@ -81,21 +81,17 @@ class UserViewSet(ModelViewSet):
     def get_subscriptions(self, request):
         """Список подписок пользователя."""
 
-        user = request.user
-        followed_list = User.objects.filter(followed__user=user)
-        paginator = PageNumberPagination()
-        paginator.page_size_query_param = 'limit'
-        authors = paginator.paginate_queryset(
-            followed_list,
-            request=request
-        )
-        serializer = ListSerializer(
-            child=UserSubscribeSerializer(),
-            context=self.get_serializer_context()
-        )
-        return paginator.get_paginated_response(
-            serializer.to_representation(authors)
-        )
+        users = User.objects.filter(following__user=request.user)
+        page = self.paginate_queryset(users)
+
+        if page:
+            serializer = self.get_serializer(page, many=True)
+
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data)
+
 
     @action(
         detail=False,
