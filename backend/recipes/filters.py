@@ -20,7 +20,7 @@ class RecipeFilter(filters.FilterSet):
         user = self.request.user
 
         if value and user.is_authenticated:
-            return queryset.filter(favorite_recipe__user=user)
+            return queryset.filter(favorite_recipes__user=user)
 
         return queryset
 
@@ -28,6 +28,6 @@ class RecipeFilter(filters.FilterSet):
         user = self.request.user
 
         if value and user.is_authenticated:
-            return queryset.filter(shopping_recipe__user=user)
+            return queryset.filter(shopping_recipes__user=user)
 
         return queryset
