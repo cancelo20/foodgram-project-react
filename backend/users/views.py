@@ -92,7 +92,6 @@ class UserViewSet(ModelViewSet):
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
 
-
     @action(
         detail=False,
         methods=['post'],
