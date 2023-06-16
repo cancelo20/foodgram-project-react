@@ -18,7 +18,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient)
 
-# from users.permissions import IsAdminOrReadOnly
+from users.permissions import IsAdminOrReadOnly
 from .permissions import RecipePermissions
 
 
@@ -154,8 +154,10 @@ class RecipeViewset(ModelViewSet):
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
 
 class IngredientsViewSet(ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    permission_classes = (IsAdminOrReadOnly,)
