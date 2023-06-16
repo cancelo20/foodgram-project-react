@@ -26,26 +26,14 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        # fields = ('id', 'name', 'color', 'slug')
         fields = '__all__'
-        #extra_kwargs = {
-        #    'id': {'read_only': True}
-        #}
-        #lookup_field = 'slug'
+
 
 
 class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        # fields = [
-        #    'id',
-        #    'name',
-        #    'measurement_unit',
-        # ]
-        # extra_kwargs = {
-        #    'id': {'read_only': True}
-        # }
         fields = '__all__'
 
 
