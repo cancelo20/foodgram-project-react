@@ -11,6 +11,8 @@ services:
   backend:
     image: cancelo20/foodgram-backend:v1
     restart: always
+    environment:
+    - PYTHONUNBUFFERED=0
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
