@@ -93,7 +93,8 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         context = self.context.get('request')
-        validated_data.pop('recipe_ingredient')
+        validated_data.pop('tags')
+        validated_data.pop('ingredients')
 
         try:
             recipe = Recipe.objects.create(
