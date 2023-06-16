@@ -49,7 +49,7 @@ class Recipe(models.Model):
         Ingredient, through='RecipesIngredients'
     )
     tags = models.ManyToManyField(
-        Tag, through='RecipesTags', many=True
+        Tag, through='RecipesTags',
     )
     image = models.ImageField('Изображение', upload_to='recipes/')
     cooking_time = models.PositiveSmallIntegerField(
