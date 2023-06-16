@@ -91,7 +91,6 @@ class UserViewSet(ModelViewSet):
 
         return self.get_paginated_response(serializer.data)
 
-
     @action(
         detail=False,
         methods=['post'],
