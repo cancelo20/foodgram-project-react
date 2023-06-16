@@ -144,7 +144,7 @@ class ShoppingCartRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='shopping_cart'
+        related_name='shopping_recipes'
     )
 
     class Meta:
