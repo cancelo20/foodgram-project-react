@@ -159,9 +159,8 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        context = self.context.get('request')
-        validated_data.pop('tags')
-        validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
 
         try:
             recipe = Recipe.objects.create(
@@ -171,23 +170,8 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         except IntegrityError:
             pass
 
-        tags_set = context.data.get('tags')
-
-        for tag in tags_set:
-            RecipesTags.objects.create(
-                recipe=recipe,
-                tag=Tag.objects.get(id=tag)
-            )
-
-        ingredients_set = context.data.get('ingredients')
-
-        for ingredient in ingredients_set:
-            ingredient_model = Ingredient.objects.get(id=ingredient['id'])
-            RecipesIngredients.objects.create(
-                recipe=recipe,
-                ingredient=ingredient_model,
-                amount=ingredient['amount'],
-            )
+        recipe.ingredients.set(ingredients)
+        recipe.tags.set(tags)
 
         return recipe
 
@@ -205,14 +189,7 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
 
         RecipesIngredients.objects.filter(recipe=recipe).delete()
 
-        for ingredient in ingredients:
-            ingredient_model = Ingredient.objects.get(id=ingredient['id'])
-            RecipesIngredients.objects.create(
-                recipe=recipe,
-                ingredient=ingredient_model,
-                amount=ingredient['amount']
-            )
-
+        recipe.ingredients.set(ingredients)
         recipe.tags.set(tags)
 
         return super().update(recipe, validated_data)
