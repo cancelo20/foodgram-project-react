@@ -66,8 +66,67 @@ class CreateRecipeIngredientSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount')
 
 
-class RecipeSerializer(serializers.ModelSerializer):
-    """Сериализация Рецептов."""
+class GetRecipeSerializer(serializers.ModelSerializer):
+    """Сериализация Get-запроса к Рецептам."""
+
+    author = AuthorSerializer(read_only=True)
+    tags = TagSerializer(many=True)
+    ingredients = RecipeIngredientSerializer()
+    image = Base64ImageField(
+        max_length=None, use_url=True,
+    )
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id',
+            'tags',
+            'author',
+            'ingredients',
+            'is_favorited',
+            'is_in_shopping_cart',
+            'name',
+            'image',
+            'text',
+            'cooking_time'
+        )
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'is_favorited': {'read_only': True},
+            'is_in_shopping_cart': {'read_only': True}
+        }
+
+    def get_is_favorited(self, data):
+        request = self.context.get('request')
+
+        if request is None or request.user.is_anonymous:
+            return False
+
+        if FavoriteRecipe.objects.filter(
+                recipe=data, user=request.user).exists():
+
+            return True
+
+        return False
+
+    def get_is_in_shopping_cart(self, data):
+        request = self.context.get('request')
+
+        if request is None or request.user.is_anonymous:
+            return False
+
+        if ShoppingCartRecipe.objects.filter(
+                recipe=data, user=request.user).exists():
+
+            return True
+
+        return False
+
+
+class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
+    """Сериализация создания/изменения Рецептов."""
 
     author = AuthorSerializer(read_only=True)
     tags = serializers.PrimaryKeyRelatedField(
@@ -197,7 +256,6 @@ class GetShortRecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = (
             'id',
-            'tags',
             'name',
             'image',
             'cooking_time'
