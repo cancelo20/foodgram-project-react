@@ -124,7 +124,7 @@ POSTGRES_PASSWORD=postgres
 DB_HOST=db
 DB_PORT=5432
 ```
-На сервере соберите docker-compose, Соберите статические файлы статики, примените миграции:
+На сервере соберите docker-compose, соберите статические файлы статики, примените миграции:
 ```
 sudo docker-compose up -d --build
 sudo docker-compose exec backend python manage.py collectstatic --no-input
