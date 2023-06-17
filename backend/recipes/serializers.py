@@ -197,6 +197,7 @@ class GetShortRecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = (
             'id',
+            'tags',
             'name',
             'image',
             'cooking_time'
