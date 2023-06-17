@@ -136,7 +136,7 @@ class RecipeViewset(ModelViewSet):
         methods=['get'],
         url_path='download_shopping_cart',
     )
-    def download_shopping_cart(request):
+    def download_shopping_cart(self, request):
         user = request.user
         filename = (f'{user.username}_shopping list') + '.txt'
         purchases = f'Список покупок для: {user.username}\n\n'
@@ -145,7 +145,7 @@ class RecipeViewset(ModelViewSet):
         ).values(
             'ingredient_name', 'ingredient_measurement_unit'
         ).annotate(amount=Sum('amount'))
-        for num, i in enumerate (ingredients):
+        for num, i in enumerate(ingredients):
             purchases += (
                 f"\n{i['ingredient_name']} - "
                 f"{i['amount']} {i['ingredient_measurement_unit']}"
