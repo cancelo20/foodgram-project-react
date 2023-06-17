@@ -126,7 +126,7 @@ class UserViewSet(ModelViewSet):
         try:
             Subscribers.objects.filter(
                 user=follower, author=followed).delete()
-        except:
+        except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(

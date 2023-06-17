@@ -89,7 +89,7 @@ class RecipeViewset(ModelViewSet):
         try:
             FavoriteRecipe.objects.filter(
                 user=user, recipe=recipe).delete()
-        except:
+        except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
@@ -124,7 +124,7 @@ class RecipeViewset(ModelViewSet):
         try:
             ShoppingCartRecipe.objects.filter(
                 user=user, recipe=recipe).delete()
-        except:
+        except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
