@@ -1,4 +1,4 @@
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
@@ -41,7 +41,7 @@ class RecipeViewset(ModelViewSet):
         'PATCH': CreateUpdateRecipeSerializer,
         'DELETE': CreateUpdateRecipeSerializer
     }
-    pagination_class = LimitOffsetPagination
+    pagination_class = PageNumberPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_serializer_class(self):
