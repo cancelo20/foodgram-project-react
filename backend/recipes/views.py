@@ -161,6 +161,7 @@ class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = None
 
 
 class IngredientsViewSet(ModelViewSet):
@@ -169,3 +170,4 @@ class IngredientsViewSet(ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (SearchFilter, )
     search_fields = ('^name', )
+    pagination_class = None
