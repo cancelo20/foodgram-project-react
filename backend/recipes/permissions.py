@@ -24,13 +24,3 @@ class RecipePermissions(BasePermission):
             request.user.is_admin
             or obj.author == request.user
         )
-
-
-class IsAuthorOrAdminPermission(BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated and (
-            request.method == 'PATCH'
-            or request.method == 'POST'
-        ):
-            return request.user.is_admin or obj.author == request.user
-        return request.method in SAFE_METHODS
