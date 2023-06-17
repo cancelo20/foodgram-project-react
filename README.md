@@ -95,3 +95,46 @@ http://myfoodgramproject.ddns.net/api/docs/
 sudo apt update
 sudo apt upgrade -y
 ```
+Скопируйте подготовленные файлы docker-compose.yml и nginx.conf из вашего проекта на сервер:
+```
+scp docker-compose.yaml <username>@<host>/home/<username>/docker-compose.yaml
+scp default.conf <username>@<host>/home/<username>/nginx.conf
+```
+Установите Docker и Docker-compose:
+```
+sudo apt install docker.io
+```
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+На сервере создайте файл .env
+```
+touch .env
+```
+Откройте env-файл и заполните его
+```
+nano .env
+```
+```
+SECRET_KEY=<SECRET_KEY>
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432
+```
+На сервере соберите docker-compose, Соберите статические файлы статики, примените миграции:
+```
+sudo docker-compose up -d --build
+sudo docker-compose exec backend python manage.py collectstatic --no-input
+sudo docker-compose exec backend python manage.py makemigrations
+docker-compose exec backend python manage.py migrate --noinput
+```
+Создайте суперпользователя(админа):
+```
+docker-compose exec backend python manage.py createsuperuser
+```
+
+Автор backend-проекта:
+[cancelo20](https://github.com/cancelo20/)
