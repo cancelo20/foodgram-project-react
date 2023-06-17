@@ -26,7 +26,7 @@ class Tag(models.Model):
                 message='Ожидается HEX-код'
             )
         ]
-)
+    )
     slug = models.SlugField(max_length=10, unique=True)
 
     class Meta:
