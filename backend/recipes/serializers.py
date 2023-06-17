@@ -98,28 +98,8 @@ class GetRecipeSerializer(serializers.ModelSerializer):
             'is_in_shopping_cart': {'read_only': True}
         }
 
-    class Meta:
-        model = Recipe
-        fields = (
-            'id',
-            'tags',
-            'author',
-            'ingredients',
-            'is_favorited',
-            'is_in_shopping_cart',
-            'name',
-            'image',
-            'text',
-            'cooking_time'
-        )
-        extra_kwargs = {
-            'id': {'read_only': True},
-            'is_favorited': {'read_only': True},
-            'is_in_shopping_cart': {'read_only': True}
-        }
-
-    def get_ingredients(obj):
-        ingredients = RecipesIngredients.objects.filter(recipe=obj)
+    def get_ingredients(self, data):
+        ingredients = RecipesIngredients.objects.filter(recipe=data)
         return RecipeIngredientSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, data):
