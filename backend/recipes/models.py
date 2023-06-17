@@ -10,6 +10,10 @@ class Ingredient(models.Model):
     name = models.CharField('Название', max_length=200)
     measurement_unit = models.CharField(max_length=10)
 
+    class Meta:
+        ordering = ['name']
+
+
     def __str__(self):
         return self.name
 

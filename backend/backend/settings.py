@@ -103,6 +103,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'PAGE_SIZE': 5,
+    'SEARCH_PARAM': 'name'
 }
 
 
