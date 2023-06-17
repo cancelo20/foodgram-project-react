@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from users.models import CustomUser as User
 from .models import (
     Ingredient, Recipe, Tag,
-    RecipesIngredients, RecipesTags,
+    RecipesIngredients,
     FavoriteRecipe, ShoppingCartRecipe
 )
 
