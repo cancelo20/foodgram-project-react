@@ -1,4 +1,5 @@
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
@@ -29,6 +30,7 @@ class RecipeViewset(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     filterset_class = RecipeFilter
+    pagination_class = PageNumberPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_permissions(self):
@@ -159,7 +161,6 @@ class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = None
 
 
 class IngredientsViewSet(ModelViewSet):
@@ -168,4 +169,3 @@ class IngredientsViewSet(ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (SearchFilter, )
     search_fields = ('^name', )
-    pagination_class = None
