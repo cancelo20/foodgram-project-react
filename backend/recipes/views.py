@@ -164,9 +164,9 @@ class RecipeViewset(ModelViewSet):
             for name, quantity in shopping_list.items:
                 shop_list_str += f'{name}: {quantity}\n'
 
-            filename = 'shopping_cart.txt'
+            file = 'shopping_cart.txt'
             response = HttpResponse(shop_list_str, content_type='text/plan')
-            response['Content-Disposition'] = f'attachment; filename={filename}'
+            response['Content-Disposition'] = f'attachment; filename={file}'
 
             return response
 
