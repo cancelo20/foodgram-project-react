@@ -23,7 +23,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient
 )
-from .permissions import RecipePermissions
+from .permissions import IsAuthorOrAdminPermission
 from .filters import RecipeFilter
 
 
@@ -50,7 +50,7 @@ class RecipeViewset(ModelViewSet):
         ]:
             permission_classes = (IsAuthenticated,)
         else:
-            permission_classes = (RecipePermissions,)
+            permission_classes = (IsAuthorOrAdminPermission,)
 
         return [permission() for permission in permission_classes]
 
