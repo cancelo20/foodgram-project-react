@@ -22,8 +22,12 @@ from .serializers import (
     CreateUpdateRecipeSerializer,
 )
 from .models import (
-    Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient,
-    RecipesIngredients
+    Tag,
+    Recipe,
+    Ingredient,
+    FavoriteRecipe,
+    RecipesIngredients,
+    ShoppingCartRecipe,
 )
 from .permissions import RecipePermissions
 from .filters import RecipeFilter
@@ -132,26 +136,40 @@ class RecipeViewset(ModelViewSet):
         methods=['get'],
         url_path='download_shopping_cart',
     )
-    def download_shopping_cart(self, request):
-        ingredients = (
-            RecipesIngredients.objects
-            .filter(recipe__shopping_recipe__user=request.user)
-            .values('ingredient')
-            .annotate(total_amount=Sum('amount'))
-            .values_list('ingredient__name', 'total_amount',
-                         'ingredient__measurement_unit')
+    def download_shopping_cart(self, request,):
+        user = request.user
+        shopping_cart = ShoppingCartRecipe.objects.filter(
+            user=user
         )
-        file_list = []
-        [file_list.append(
-            '{} - {} {}.'.format(*ingredient)) for ingredient in ingredients]
-        file = HttpResponse('Cписок покупок:\n' + '\n'.join(file_list),
-                            content_type='text/plain')
-        file['Content-Disposition'] = (
-            'attachment; filename=shopping_cart.txt'
-        )
+        recipes_id = shopping_cart.values_list(
+            'recipe', flat=True).order_by('id')
+        recipes = Recipe.objects.filter(id__in=recipes_id)
+        shopping_list = {}
 
-        return file
+        for recipe in recipes:
+            for ingredient in recipe.ingredients.all():
+                ingredient_in_recipe = RecipesIngredients.objects.filter(
+                    recipe=recipe, ingredient=ingredient
+                ).first()
+                quantity = ingredient_in_recipe.quantity * shopping_cart.filter(
+                    recipe=recipe.first().quantity
+                )
 
+                if ingredient.title in shopping_list:
+                    shopping_list[ingredient.title] += quantity
+                else:
+                    shopping_list[ingredient.title] = quantity
+
+            shopping_list_str = ''
+
+            for name, quantity in shopping_list.items:
+                shopping_list_str += f'{name}: {quantity}\n'
+
+            filename = 'shopping_cart.txt'
+            response = HttpResponse(shopping_list_str, content_type='text/plan')
+            response['Content-Disposition'] = f'attachment; filename={filename}'
+
+            return response
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
