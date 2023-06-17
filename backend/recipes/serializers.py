@@ -191,7 +191,7 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
 
         return recipe
 
-    def update(self, instance, validated_data):
+    def partial_update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.text = validated_data.get('text', instance.text)
         instance.image = validated_data.get('image', instance.image)
