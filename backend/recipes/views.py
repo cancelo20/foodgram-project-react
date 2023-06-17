@@ -8,6 +8,7 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+from django.db.models import Sum
 
 from users.permissions import IsAdminOrReadOnly
 
@@ -135,40 +136,28 @@ class RecipeViewset(ModelViewSet):
         methods=['get'],
         url_path='download_shopping_cart',
     )
-    def download_shopping_cart(self, request,):
+    def download_shopping_cart(request):
         user = request.user
-        shopping_cart = ShoppingCartRecipe.objects.filter(
-            user=user
+        filename = (f'{user.username}_shopping list') + '.txt'
+        purchases = f'Список покупок для: {user.username}\n\n'
+        ingredients = RecipesIngredients.objects.filter(
+            recipe_shopping_cart_user=request.user
+        ).values(
+            'ingredient_name', 'ingredient_measurement_unit'
+        ).annotate(amount=Sum('amount'))
+        for num, i in enumerate (ingredients):
+            purchases += (
+                f"\n{i['ingredient_name']} - "
+                f"{i['amount']} {i['ingredient_measurement_unit']}"
+            )
+            if num < ingredients.count() - 1:
+                purchases += ', '
+        response = HttpResponse(
+            purchases, content_type='text/plain; charset=utf-8'
         )
-        recipes_id = shopping_cart.values_list(
-            'recipe', flat=True).order_by('id')
-        recipes = Recipe.objects.filter(id__in=recipes_id)
-        shopping_list = {}
+        response['Content-Disposition'] = f'attachment; filename={filename}'
 
-        for recipe in recipes:
-            for ingredient in recipe.ingredients.all():
-                ingrdient_in_recipe = RecipesIngredients.objects.filter(
-                    recipe=recipe, ingredient=ingredient
-                ).first()
-                quantity = ingrdient_in_recipe.quantity * shopping_cart.filter(
-                    recipe=recipe.first().quantity
-                )
-
-                if ingredient.title in shopping_list:
-                    shopping_list[ingredient.title] += quantity
-                else:
-                    shopping_list[ingredient.title] = quantity
-
-            shop_list_str = ''
-
-            for name, quantity in shopping_list.items:
-                shop_list_str += f'{name}: {quantity}\n'
-
-            file = 'shopping_cart.txt'
-            response = HttpResponse(shop_list_str, content_type='text/plan')
-            response['Content-Disposition'] = f'attachment; filename={file}'
-
-            return response
+        return response
 
 
 class TagViewSet(ModelViewSet):
