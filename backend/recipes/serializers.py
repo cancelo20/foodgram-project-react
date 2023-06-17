@@ -21,7 +21,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ('email', 'id', 'username', 'first_name', 'last_name')
 
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.ModelSerializer): # will delete
     slug = serializers.SlugField()
 
     class Meta:
@@ -42,11 +42,9 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         source='ingredient.id'
     )
     name = serializers.CharField(
-        read_only=True,
         source='ingredient.name'
     )
     measurement_unit = serializers.CharField(
-        read_only=True,
         source='ingredient.measurement_unit'
     )
     amount = serializers.IntegerField(required=True)
@@ -54,13 +52,21 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipesIngredients
         fields = ('id', 'name', 'measurement_unit', 'amount')
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'name': {'read_only': True},
+            'measurement_unit': {'read_only': True},
+            'amount': {'read_only': True}
+        }
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериализация Рецептов."""
 
     author = AuthorSerializer(read_only=True)
-    tags = TagSerializer(many=True)
+    tags = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Tag.objects.all()
+    )
     ingredients = RecipeIngredientSerializer(
         many=True,
         source='recipe_ingredient'
