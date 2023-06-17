@@ -146,10 +146,11 @@ class RecipeViewset(ModelViewSet):
             '{} - {} {}.'.format(*ingredient)) for ingredient in ingredients]
         file = HttpResponse('Cписок покупок:\n' + '\n'.join(file_list),
                             content_type='text/plain')
-        file['Content-Disposition'] = ('attachment; filename=shopping_cart.txt')
+        file['Content-Disposition'] = (
+            'attachment; filename=shopping_cart.txt'
+        )
+
         return file
-
-
 
 
 class TagViewSet(ModelViewSet):
