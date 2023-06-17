@@ -8,20 +8,22 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+from django.db.models import Sum
 
 from users.permissions import IsAdminOrReadOnly
 
 from .serializers import (
     TagSerializer,
-    CreateUpdateRecipeSerializer,
-    GetRecipeSerializer,
     FavoriteSerializer,
+    GetRecipeSerializer,
     IngredientSerializer,
     ShoppingCartSerializer,
-    GetShortRecipeSerializer
+    GetShortRecipeSerializer,
+    CreateUpdateRecipeSerializer,
 )
 from .models import (
-    Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient
+    Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient,
+    RecipesIngredients
 )
 from .permissions import RecipePermissions
 from .filters import RecipeFilter
@@ -131,39 +133,23 @@ class RecipeViewset(ModelViewSet):
         url_path='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
-        try:
-            shopping_cart = ShoppingCartRecipe.objects.filter(
-                user=request.user).all()
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        else:
-            shopping_list = {}
-            for item in shopping_cart:
-                for recipe_ingredient in item.recipe.recipe_ingredients.all():
-                    name = recipe_ingredient.ingredient.name
-                    m_unit = recipe_ingredient.ingredient.measurement_unit
-                    amount = recipe_ingredient.amount
-                    if name not in shopping_list:
-                        shopping_list[name] = {
-                            'name': name,
-                            'measurement_unit': m_unit,
-                            'amount': amount
-                        }
-                    else:
-                        shopping_list[name]['amount'] += amount
-            content = (
-                [
-                    f'{item["name"]} ({item["measurement_unit"]}) '
-                    f'- {item["amount"]}\n'
-                    for item in shopping_list.values()
-                ]
-            )
-            filename = 'shopping_list.txt'
-            response = HttpResponse(content, content_type='text/plain')
-            response['Content-Disposition'] = (
-                'attachment; filename={0}'.format(filename)
-            )
-            return response
+        ingredients = (
+            RecipesIngredients.objects
+            .filter(recipe__shopping_recipe__user=request.user)
+            .values('ingredient')
+            .annotate(total_amount=Sum('amount'))
+            .values_list('ingredient__name', 'total_amount',
+                         'ingredient__measurement_unit')
+        )
+        file_list = []
+        [file_list.append(
+            '{} - {} {}.'.format(*ingredient)) for ingredient in ingredients]
+        file = HttpResponse('Cписок покупок:\n' + '\n'.join(file_list),
+                            content_type='text/plain')
+        file['Content-Disposition'] = ('attachment; filename=shopping_cart.txt')
+        return file
+
+
 
 
 class TagViewSet(ModelViewSet):
