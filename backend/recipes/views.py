@@ -1,5 +1,4 @@
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
@@ -8,6 +7,8 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+
+from users.permissions import IsAdminOrReadOnly
 
 from .serializers import (
     TagSerializer,
@@ -18,19 +19,18 @@ from .serializers import (
     GetShortRecipeSerializer
 )
 from .models import (
-    Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient)
-
-from .filters import RecipeFilter
-
-from users.permissions import IsAdminOrReadOnly
+    Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient
+)
+from .paginators import CustomPageNumberPagination
 from .permissions import RecipePermissions
+from .filters import RecipeFilter
 
 
 class RecipeViewset(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     filterset_class = RecipeFilter
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_permissions(self):
