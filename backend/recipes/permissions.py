@@ -11,6 +11,9 @@ class RecipePermissions(BasePermission):
         elif view.action in ['create', 'destroy', 'update']:
             return request.user.is_authenticated
 
+        elif request.method == 'POST':
+            return request.user.is_authenticated
+
         return False
 
     def has_object_permission(self, request, view, obj):
