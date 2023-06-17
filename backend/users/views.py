@@ -23,7 +23,7 @@ class UserViewSet(ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    pagination_class =LimitOffsetPagination
+    pagination_class = LimitOffsetPagination
     http_method_names = ('post', 'get', 'delete')
 
     def get_permissions(self):
