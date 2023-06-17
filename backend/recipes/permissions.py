@@ -14,7 +14,7 @@ class RecipePermissions(BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        if view.action in ['retrieve', 'list']:
+        if view.action in ['retrieve', 'list', 'update']:
             return True
 
         if view.action == 'destroy':
