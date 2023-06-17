@@ -22,7 +22,7 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=10, unique=True)
 
     class Meta:
-        ordering = ('slug',)
+        ordering = ('id',)
         constraints = [
             models.UniqueConstraint(
                 fields=['slug'],
