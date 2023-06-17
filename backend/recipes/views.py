@@ -31,16 +31,16 @@ class RecipeViewset(ModelViewSet):
     queryset = Recipe.objects.all()
     filterset_class = RecipeFilter
     serializer_classes = {
-        'list': GetRecipeSerializer,
-        'retrieve': GetRecipeSerializer,
-        'create': CreateUpdateRecipeSerializer,
-        'update': CreateUpdateRecipeSerializer
+        'GET': GetRecipeSerializer,
+        'POST': CreateUpdateRecipeSerializer,
+        'PATCH': CreateUpdateRecipeSerializer,
+        'DELETE': CreateUpdateRecipeSerializer
     }
     pagination_class = LimitOffsetPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_serializer_class(self):
-        return self.serializer_classes.get(self.action)
+        return self.serializer_classes.get(self.request.method)
 
     def get_permissions(self):
         if self.action in [
