@@ -216,9 +216,6 @@ class FavoriteSerializer(serializers.ModelSerializer):
         username = self.context.get('request').user
         recipe = Recipe.objects.get(id=data.get('id'))
 
-        if username == recipe.author:
-            raise ValidationError('Вы автор рецепта!')
-
         if FavoriteRecipe.objects.filter(
                 user=username, recipe=recipe).exists():
             raise ValidationError('Рецепт уже добавлен!')
@@ -247,9 +244,6 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
     def validate(self, data):
         username = self.context.get('request').user
         recipe = Recipe.objects.get(id=data.get('id'))
-
-        if username == recipe.author:
-            raise ValidationError('Вы автор рецепта!')
 
         if ShoppingCartRecipe.objects.filter(
                 user=username, recipe=recipe).exists():
