@@ -17,10 +17,7 @@ class RecipePermissions(BasePermission):
         if view.action in ['retrieve', 'list']:
             return True
 
-        if view.action == 'destroy' or request.method == 'POST':
-            return (
-                request.user.is_admin
-                or obj.author == request.user
-            )
-
-        return False
+        return (
+            request.user.is_admin
+            or obj.author == request.user
+        )
