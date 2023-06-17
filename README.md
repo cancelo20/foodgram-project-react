@@ -2,7 +2,7 @@
 На этом сервисе пользователи смогут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
 ## Технологический стек
-[![Django-app workflow](https://github.com/cancelo20/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg?branch=master)](https://github.com/cancelo20/foodgram-project-react/actions/workflows/yamdb_workflow.yml)
+[![Django-app workflow](https://github.com/cancelo20/foodgram-project-react/actions/workflows/foodgram-backend.yml/badge.svg?branch=master)](https://github.com/cancelo20/foodgram-project-react/actions/workflows/foodgram-backend.yml)
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat&logo=Python&logoColor=56C0C0&color=008080)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat&logo=Django&logoColor=56C0C0&color=008080)](https://www.djangoproject.com/)
 [![Django REST Framework](https://img.shields.io/badge/-Django%20REST%20Framework-464646?style=flat&logo=Django%20REST%20Framework&logoColor=56C0C0&color=008080)](https://www.django-rest-framework.org/)
@@ -88,4 +88,3 @@ http://myfoodgramproject.ddns.net/api/docs/
 + редактировать/удалять любые рецепты,
 + добавлять/удалять/редактировать ингредиенты.
 + добавлять/удалять/редактировать теги.
-+ Все эти функции нужно реализовать в стандартной админ-панели Django.
