@@ -68,7 +68,6 @@ class CreateRecipeIngredientSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount')
 
 
-
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериализация Рецептов."""
 
