@@ -20,8 +20,8 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = User
         fields = ('email', 'id', 'username', 'first_name', 'last_name')
 
-
-class TagSerializer(serializers.ModelSerializer): # will delete
+# will delete
+class TagSerializer(serializers.ModelSerializer):
     slug = serializers.SlugField()
 
     class Meta:
