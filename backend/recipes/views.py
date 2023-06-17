@@ -1,5 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
@@ -18,7 +19,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient)
 
-from .filters import IngredientFilter, RecipeFilter
+from .filters import RecipeFilter
 
 from users.permissions import IsAdminOrReadOnly
 from .permissions import RecipePermissions
@@ -164,4 +165,5 @@ class IngredientsViewSet(ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    filterset_class = IngredientFilter
+    filter_backends = (SearchFilter, )
+    search_fields = ('^name', )
