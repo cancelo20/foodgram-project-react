@@ -171,17 +171,22 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         except IntegrityError:
             pass
 
-        for ingredient in context.data.get('ingredients'):
-            RecipesIngredients.objects.create(
-                recipe=recipe,
-                ingredient=Ingredient.objects.get(id=ingredient.get('id')),
-                amount=ingredient['amount'],
-            )
+        tags_set = context.data.get('tags')
 
-        for tag in context.data.get('tags'):
+        for tag in tags_set:
             RecipesTags.objects.create(
                 recipe=recipe,
-                tag=Tag.objects.get(id=tag.get('id'))
+                tag=Tag.objects.get(id=tag)
+            )
+
+        ingredients_set = context.data.get('ingredients')
+
+        for ingredient in ingredients_set:
+            ingredient_model = Ingredient.objects.get(id=ingredient['id'])
+            RecipesIngredients.objects.create(
+                recipe=recipe,
+                ingredient=ingredient_model,
+                amount=ingredient['amount'],
             )
 
         return recipe
@@ -198,22 +203,22 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         recipe = instance
 
         validated_data.pop('recipe_ingredient')
-        validated_data.pop('recipe_tag')
 
         RecipesIngredients.objects.filter(recipe=instance).delete()
-        RecipesTags.objects.filter(recipe=instance).delete()
 
         for ingredient in context.data.get('ingredients'):
-            RecipesIngredients.objects.update_or_create(
+            ingredient_model = Ingredient.objects.get(id=ingredient['id'])
+            RecipesIngredients.objects.create(
                 recipe=recipe,
-                ingredient=Ingredient.objects.get(id=ingredient.get('id')),
-                amount=ingredient.get('amount')
+                ingredient=ingredient_model,
+                amount=ingredient['amount']
             )
 
-        for tag in context.data.get('tags'):
+        for tag_id in context.data.get('tags'):
+            tag_model = Tag.objects.get(id=tag_id)
             RecipesTags.objects.update_or_create(
                 recipe=recipe,
-                tag=Tag.objects.get(id=tag.get('id'))
+                tag=tag_model
             )
 
         return instance
