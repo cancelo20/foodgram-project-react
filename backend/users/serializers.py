@@ -7,7 +7,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 
 from recipes.models import Recipe
-from recipes.serializers import GetRecipeSerializer
+from recipes.serializers import RecipeSerializer
 
 from .models import Subscribers, CustomUser as User
 from .mixins import IsSubscribedMixin
@@ -150,7 +150,7 @@ class GetSubscritionsSerializer(
 
     def get_recipes(self, data):
         queryset = Recipe.objects.filter(author=data)
-        serializer = GetRecipeSerializer(queryset, many=True)
+        serializer = RecipeSerializer(queryset, many=True)
         return serializer.data
 
 

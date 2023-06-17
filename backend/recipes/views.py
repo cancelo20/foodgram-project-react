@@ -13,8 +13,7 @@ from users.permissions import IsAdminOrReadOnly
 
 from .serializers import (
     TagSerializer,
-    CreateUpdateRecipeSerializer,
-    GetRecipeSerializer,
+    RecipeSerializer,
     FavoriteSerializer,
     IngredientSerializer,
     ShoppingCartSerializer,
@@ -30,19 +29,9 @@ from .filters import RecipeFilter
 class RecipeViewset(ModelViewSet):
     queryset = Recipe.objects.all()
     filterset_class = RecipeFilter
-    serializer_class = {
-        'list': GetRecipeSerializer,
-        'retrieve': GetRecipeSerializer,
-        'create': CreateUpdateRecipeSerializer,
-        'update': CreateUpdateRecipeSerializer
-    }
+    serializer_class = RecipeSerializer
     pagination_class = LimitOffsetPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
-
-    def get_serializer_class(self):
-        return self.serializer_classes.get(
-            self.action,
-        )
 
     def get_permissions(self):
         if self.action in [
