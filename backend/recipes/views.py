@@ -23,7 +23,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient
 )
-from .permissions import RecipePermissions
+from .permissions import RecipePermissions, RecipeUpdatePermission
 from .filters import RecipeFilter
 
 
@@ -49,6 +49,8 @@ class RecipeViewset(ModelViewSet):
             'download_shopping_cart'
         ]:
             permission_classes = (IsAuthenticated,)
+        elif self.action == 'update':
+            permission_classes = (RecipeUpdatePermission,)
         else:
             permission_classes = (RecipePermissions,)
 
