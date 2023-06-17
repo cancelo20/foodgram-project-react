@@ -137,7 +137,9 @@ class RecipeViewset(ModelViewSet):
         url_path='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
-        shopping_cart = ShoppingCartRecipe.objects.filter(user=self.request.user)
+        shopping_cart = ShoppingCartRecipe.objects.filter(
+            user=self.request.user
+        )
         recipes = [item.recipe.id for item in shopping_cart]
         buy_list = RecipesIngredients.objects.filter(
             recipe__in=recipes
