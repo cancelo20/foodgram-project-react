@@ -199,15 +199,13 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
             'cooking_time', instance.cooking_time)
         instance.save()
 
-        context = self.context.get('request')
         recipe = instance
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
 
-        validated_data.pop('tags')
-        validated_data.pop('ingredients')
+        RecipesIngredients.objects.filter(recipe=recipe).delete()
 
-        RecipesIngredients.objects.filter(recipe=instance).delete()
-
-        for ingredient in context.data.get('ingredients'):
+        for ingredient in ingredients:
             ingredient_model = Ingredient.objects.get(id=ingredient['id'])
             RecipesIngredients.objects.create(
                 recipe=recipe,
@@ -215,14 +213,9 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
                 amount=ingredient['amount']
             )
 
-        for tag_id in context.data.get('tags'):
-            tag_model = Tag.objects.get(id=tag_id)
-            RecipesTags.objects.update_or_create(
-                recipe=recipe,
-                tag=tag_model
-            )
+        recipe.tags.set(tags)
 
-        return instance
+        return super().update(recipe, validated_data)
 
 
 class GetShortRecipeSerializer(serializers.ModelSerializer):
