@@ -47,7 +47,6 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit'
     )
-    amount = serializers.IntegerField(required=True)
 
     class Meta:
         model = RecipesIngredients
@@ -56,7 +55,6 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
             'id': {'read_only': True},
             'name': {'read_only': True},
             'measurement_unit': {'read_only': True},
-            'amount': {'read_only': True}
         }
 
 

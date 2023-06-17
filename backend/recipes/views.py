@@ -19,7 +19,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient)
 
-from .filters import RecipeFilter
+from .filters import IngredientFilter, RecipeFilter
 
 from users.permissions import IsAdminOrReadOnly
 from .permissions import RecipePermissions
@@ -165,5 +165,4 @@ class IngredientsViewSet(ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = (SearchFilter, )
-    search_fields = ('^name', )
+    filterset_class = IngredientFilter
