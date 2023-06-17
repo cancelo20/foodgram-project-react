@@ -21,7 +21,6 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient
 )
-from .paginators import CustomPageNumberPagination
 from .permissions import RecipePermissions
 from .filters import RecipeFilter
 
@@ -30,7 +29,6 @@ class RecipeViewset(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     filterset_class = RecipeFilter
-    pagination_class = CustomPageNumberPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_permissions(self):
