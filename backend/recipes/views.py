@@ -34,7 +34,7 @@ class RecipeViewset(ModelViewSet):
         'list': GetRecipeSerializer,
         'retrieve': GetRecipeSerializer,
         'create': CreateUpdateRecipeSerializer,
-        'partial_update': CreateUpdateRecipeSerializer
+        'update': CreateUpdateRecipeSerializer
     }
     pagination_class = LimitOffsetPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
