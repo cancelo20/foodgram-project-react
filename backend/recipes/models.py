@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 from users.models import CustomUser as User
@@ -18,7 +18,15 @@ class Tag(models.Model):
     """Модель тэгов."""
 
     name = models.CharField('Название', max_length=200, unique=True)
-    color = models.CharField('Цвет тэга', max_length=7, unique=True)
+    color = models.CharField(
+        'Цвет тэга', max_length=7, unique=True,
+        validators=[
+            RegexValidator(
+                '^#([a-fA-F0-9]{6})',
+                message='Ожидается HEX-код'
+            )
+        ]
+)
     slug = models.SlugField(max_length=10, unique=True)
 
     class Meta:
