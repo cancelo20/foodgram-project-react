@@ -11,7 +11,7 @@ class RecipePermissions(BasePermission):
         elif view.action in ['create', 'destroy', 'update']:
             return request.user.is_authenticated
 
-        elif request.method == 'POST':
+        elif request.method == 'PATCH':
             return request.user.is_authenticated
 
         return False
