@@ -25,7 +25,6 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     http_method_names = ('post', 'get', 'delete')
-    pagination_class = PageNumberPagination
 
     def get_permissions(self):
         if self.action in ['subscribe', 'unsubscribe', 'get_subscriptions']:
