@@ -129,7 +129,7 @@ class RecipeViewset(ModelViewSet):
 
     @action(
         detail=False,
-        methods=['GET'],
+        methods=['get'],
         url_path='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
