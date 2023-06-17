@@ -100,6 +100,7 @@ class GetRecipeSerializer(serializers.ModelSerializer):
 
     def get_ingredients(self, data):
         ingredients = RecipesIngredients.objects.filter(recipe=data)
+
         return RecipeIngredientSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, data):

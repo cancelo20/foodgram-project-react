@@ -30,7 +30,7 @@ from .filters import RecipeFilter
 class RecipeViewset(ModelViewSet):
     queryset = Recipe.objects.all()
     filterset_class = RecipeFilter
-    serializer_class = {
+    serializer_classes = {
         'list': GetRecipeSerializer,
         'retrieve': GetRecipeSerializer,
         'create': CreateUpdateRecipeSerializer,
