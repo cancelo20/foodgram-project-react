@@ -170,7 +170,14 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         except IntegrityError:
             pass
 
-        recipe.ingredients.set(ingredients)
+        for ingredient in ingredients:
+            ingredient_model = Ingredient.objects.get(id=ingredient['id'])
+            RecipesIngredients.objects.create(
+                recipe=recipe,
+                ingredient=ingredient_model,
+                amount=ingredient['amount']
+            )
+
         recipe.tags.set(tags)
 
         return recipe
@@ -189,7 +196,14 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
 
         RecipesIngredients.objects.filter(recipe=recipe).delete()
 
-        recipe.ingredients.set(ingredients)
+        for ingredient in ingredients:
+            ingredient_model = Ingredient.objects.get(id=ingredient['id'])
+            RecipesIngredients.objects.create(
+                recipe=recipe,
+                ingredient=ingredient_model,
+                amount=ingredient['amount']
+            )
+
         recipe.tags.set(tags)
 
         return super().update(recipe, validated_data)
