@@ -49,8 +49,6 @@ class RecipeViewset(ModelViewSet):
             'download_shopping_cart'
         ]:
             permission_classes = (IsAuthenticated,)
-        elif self.action == 'update':
-            permission_classes = (RecipeUpdatePermission,)
         else:
             permission_classes = (RecipePermissions,)
 
