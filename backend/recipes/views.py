@@ -8,7 +8,6 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from django.db.models import Sum
 
 from users.permissions import IsAdminOrReadOnly
 
@@ -148,10 +147,10 @@ class RecipeViewset(ModelViewSet):
 
         for recipe in recipes:
             for ingredient in recipe.ingredients.all():
-                ingredient_in_recipe = RecipesIngredients.objects.filter(
+                ingrdient_in_recipe = RecipesIngredients.objects.filter(
                     recipe=recipe, ingredient=ingredient
                 ).first()
-                quantity = ingredient_in_recipe.quantity * shopping_cart.filter(
+                quantity = ingrdient_in_recipe.quantity * shopping_cart.filter(
                     recipe=recipe.first().quantity
                 )
 
@@ -160,16 +159,17 @@ class RecipeViewset(ModelViewSet):
                 else:
                     shopping_list[ingredient.title] = quantity
 
-            shopping_list_str = ''
+            shop_list_str = ''
 
             for name, quantity in shopping_list.items:
-                shopping_list_str += f'{name}: {quantity}\n'
+                shop_list_str += f'{name}: {quantity}\n'
 
             filename = 'shopping_cart.txt'
-            response = HttpResponse(shopping_list_str, content_type='text/plan')
+            response = HttpResponse(shop_list_str, content_type='text/plan')
             response['Content-Disposition'] = f'attachment; filename={filename}'
 
             return response
+
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
