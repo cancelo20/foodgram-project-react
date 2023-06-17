@@ -23,7 +23,7 @@ from .serializers import (
 from .models import (
     Recipe, FavoriteRecipe, ShoppingCartRecipe, Tag, Ingredient
 )
-from .permissions import RecipePermissions, RecipeUpdatePermission
+from .permissions import RecipePermissions
 from .filters import RecipeFilter
 
 
