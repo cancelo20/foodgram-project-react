@@ -149,7 +149,7 @@ class GetSubscritionsSerializer(
         return Recipe.objects.filter(author=data).count()
 
     def get_recipes(self, data):
-        recipe = Recipe.objects.filter(author=data)
+        recipe = Recipe.objects.filter(author=data)[:3]
         serializer = GetRecipeSerializer(recipe, many=True)
 
         return serializer.data
