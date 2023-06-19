@@ -16,7 +16,8 @@ from .models import (
 
 class AuthorSerializer(
     serializers.ModelSerializer,
-    IsSubscribedMixin):
+    IsSubscribedMixin
+):
     """Сериализация автора рецепта."""
 
     class Meta:
@@ -28,7 +29,7 @@ class AuthorSerializer(
             'first_name',
             'last_name',
             'is_subscribed',
-            )
+        )
         read_only_fields = fields
 
 
