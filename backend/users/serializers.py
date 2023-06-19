@@ -2,7 +2,7 @@ import re
 
 from django.shortcuts import get_object_or_404
 
-from rest_framework.pagination import LimitOffsetPagination
+# from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
