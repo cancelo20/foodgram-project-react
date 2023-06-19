@@ -30,7 +30,6 @@ class AuthorSerializer(
             'last_name',
             'is_subscribed',
         )
-        read_only_fields = fields
 
 
 class TagSerializer(serializers.ModelSerializer):
