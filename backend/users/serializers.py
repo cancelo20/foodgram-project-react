@@ -150,11 +150,9 @@ class GetSubscritionsSerializer(
         return Recipe.objects.filter(author=data).count()
 
     def get_recipes(self, data):
-        recipe = Recipe.objects.filter(author=data)
-        page = self.paginate_queryset(recipe)
-        serializer = GetRecipeSerializer(page, many=True)
-        paginator = LimitOffsetPagination()
-        return paginator.get_paginated_response(serializer.data)
+        recipe = Recipe.objects.filter(author=data)[:3]
+        serializer = GetRecipeSerializer(recipe, many=True)
+        return serializer.data
 
 
 class UserSubscribeSerializer(serializers.ModelSerializer):
