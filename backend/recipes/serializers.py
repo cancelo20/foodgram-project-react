@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from django.db import IntegrityError
 
+from users.mixins import IsSubscribedMixin
 from users.models import CustomUser as User
 from .models import (
     Ingredient, Recipe, Tag,
@@ -13,12 +14,22 @@ from .models import (
 )
 
 
-class AuthorSerializer(serializers.ModelSerializer):
+class AuthorSerializer(
+    serializers.ModelSerializer,
+    IsSubscribedMixin):
     """Сериализация автора рецепта."""
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name')
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            )
+        read_only_fields = fields
 
 
 class TagSerializer(serializers.ModelSerializer):
