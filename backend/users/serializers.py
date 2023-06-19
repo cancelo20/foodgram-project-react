@@ -2,7 +2,6 @@ import re
 
 from django.shortcuts import get_object_or_404
 
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
@@ -150,12 +149,10 @@ class GetSubscritionsSerializer(
         return Recipe.objects.filter(author=data).count()
 
     def get_recipes(self, data):
-        recipe = Recipe.objects.filter(author=data)
-        page = self.paginate_queryset(recipe)
-        serializer = GetRecipeSerializer(page, many=True)
-        paginator = LimitOffsetPagination()
+        recipe = Recipe.objects.filter(author=data)[:3]
+        serializer = GetRecipeSerializer(recipe, many=True)
 
-        return paginator.get_paginated_response(serializer.data)
+        return serializer.data
 
 
 class UserSubscribeSerializer(serializers.ModelSerializer):
